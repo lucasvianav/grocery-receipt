@@ -85,3 +85,27 @@ def otsu(img: NDArray[np.number]) -> NDArray[np.number]:
     return binarize(img, np.argmin(variances))
 
 
+def plot(
+    imgs: list[dict[str, NDArray | str]], n_rows: int, n_cols: int, axis=True
+) -> None:
+    """
+    Plot a list of images using MatPlotLib.
+
+    Parameters
+    ----------
+    imgs ({ "title": str, "images": NDArray }): images to be plotted
+    n_rows (int): number of rows in the grid
+    n_cols (int): number of columns in the grid
+    axis (boolean): should the axis be shown in the subplots
+    """
+    actual_n_rows = len(imgs) // n_cols
+    n_cols_last_row = len(imgs) - (actual_n_rows - 1) * n_cols
+
+    for i in range(1, actual_n_rows + 1):
+        for j in range(1, n_cols_last_row + 1):
+            img = imgs[(index := (i - 1) * n_cols + j) - 1]
+            plt.subplot(int(f"{n_rows}{n_cols}{index}"))
+            plt.axis("on" if axis else "off")
+            plt.title(img["title"])
+            plt.imshow(img["image"], cmap=img["cmap"] if "cmap" in img else "gray")
+    plt.show()

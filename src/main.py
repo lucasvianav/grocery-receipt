@@ -1,6 +1,5 @@
 import cv2
 import imageio
-from matplotlib import pyplot as plt
 
 import utils
 
@@ -16,20 +15,14 @@ if __name__ == "__main__":
         cv2.THRESH_BINARY + cv2.THRESH_OTSU,
     )
 
-    plt.subplot(141)
-    plt.axis("off")
-    plt.title("Original image")
-    plt.imshow(input_img, cmap="gray")
-    plt.subplot(142)
-    plt.axis("off")
-    plt.title("Binary image (threshold = 105)")
-    plt.imshow(img1, cmap="gray")
-    plt.subplot(143)
-    plt.axis("off")
-    plt.title("Otsu")
-    plt.imshow(img2, cmap="gray")
-    plt.subplot(144)
-    plt.axis("off")
-    plt.title("CV2 Otsu")
-    plt.imshow(img3, cmap="gray")
-    plt.show()
+    utils.plot(
+        [
+            {"title": "Original image", "image": input_img},
+            {"title": "Binary Image (arbitrary threshold = 105)", "image": img1},
+            {"title": "Scratch Otsu", "image": img2},
+            {"title": "OpenCV Otsu", "image": img3},
+        ],
+        1,
+        4,
+        False,
+    )
