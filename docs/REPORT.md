@@ -39,3 +39,12 @@ All of the input images are [grocery receipt photos](../receipts) taken by the s
 ### With shadow
 
 ![](../.github/images/shadow-comparison.png)
+
+
+## References
+
+- SCC0251's class presentations as well as [Jupyter Notebooks](https://github.com/maponti/imageprocessing_course_icmc);
+- OpenCV - [Image Thresholding](https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_thresholding/py_thresholding.html);
+- StackOverflow - [Remove background text and noise from an image using image processing with OpenCV](https://stackoverflow.com/questions/60145306/remove-background-text-and-noise-from-an-image-using-image-processing-with-openc#60404579);
+- StackOverflow - [Implementing Otsu binarization from scratch python](https://stackoverflow.com/questions/48213278/implementing-otsu-binarization-from-scratch-python);
+- StackOverflow - [Converting an image to grayscale using numpy](https://stackoverflow.com/questions/51285593/converting-an-image-to-grayscale-using-numpy).
