@@ -1,24 +1,23 @@
 import cv2
-import imageio
 
 import utils
 
 if __name__ == "__main__":
-    input_img = utils.grayscale(imageio.imread((filename := "receipts/no-shadow.jpg")))
+    input_img = cv2.imread("receipts/no-shadow.jpg", cv2.IMREAD_GRAYSCALE)
 
     img1 = utils.binarize(input_img, 105)
     img2 = utils.otsu(input_img)
     _, img3 = cv2.threshold(
-        (input_img_cv := cv2.imread(filename, cv2.IMREAD_GRAYSCALE)),
+        input_img,
         0,
         255,
         cv2.THRESH_BINARY + cv2.THRESH_OTSU,
     )
     img4 = cv2.adaptiveThreshold(
-        input_img_cv, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 25, 2
+        input_img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 25, 2
     )
     img5 = cv2.adaptiveThreshold(
-        input_img_cv, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 25, 2
+        input_img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 25, 2
     )
 
     utils.plot(

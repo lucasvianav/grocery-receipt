@@ -48,11 +48,13 @@ def grayscale(img: NDArray) -> NDArray[np.number]:
 
 def binarize(img: NDArray[np.number], threshold: int | np.number) -> NDArray[np.number]:
     """
-    Convert an image to binary - all pixels with value below a threshold are black (0) and all above it are white (1).
+    Convert an image to a binary image - all pixels with value below a threshold
+    are black (0) and all above it are white (1).
 
     Parameters
     ----------
-    img (NDArray): the image to be converted to binary.
+    img (NDArray): the image to be converted.
+    threshold (number): the threshold to binarize upon.
 
     Returns
     -------
@@ -64,6 +66,18 @@ def binarize(img: NDArray[np.number], threshold: int | np.number) -> NDArray[np.
 
 
 def otsu(img: NDArray[np.number]) -> NDArray[np.number]:
+    """
+    Convert an image to a binary image using the Otsu Thresholding method
+    provided in class.
+
+    Parameters
+    ----------
+    img (NDArray): the image to be converted.
+
+    Returns
+    -------
+    NDArray[np.number]: the binary image.
+    """
     n_pixels = np.product(img.shape)
     variances = []
     histogram, _ = np.histogram(img, bins=256, range=(0, 256))
