@@ -5,7 +5,7 @@ from numpy.typing import NDArray
 import utils
 
 if __name__ == "__main__":
-    original_img: NDArray = cv2.imread("receipts/cropped.jpg", cv2.IMREAD_GRAYSCALE)
+    original_img: NDArray = cv2.imread("receipts/cropped/cropped.jpg", cv2.IMREAD_GRAYSCALE)
 
     # apply otsu binarization to the pre-processed image
     otsu_img: NDArray
