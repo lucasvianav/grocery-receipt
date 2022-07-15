@@ -32,7 +32,8 @@ def plot(
 
 def clean(img: NDArray) -> NDArray:
     """
-    Apply a cleaning (image procesing) pipeline to an image. The pipeline's core consists in morphological dilation and image subtraction.
+    Apply a cleaning (image procesing) pipeline to an image. The pipeline's core
+    consists in morphological dilation and image subtraction.
 
     Parameters
     ----------

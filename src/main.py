@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # )
 
     text: str = pytesseract.image_to_string(
-        otsu_img, lang="por", config="--oem 2 --psm 3"
+        otsu_img, lang="grocery", config="--oem 1 --psm 3"
     )
     items_indexes = re.findall(r"^\d{3}\s{1,}", text, re.IGNORECASE + re.MULTILINE)
     total = re.findall(
