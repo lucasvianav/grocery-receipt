@@ -5,7 +5,12 @@
 - [Goal](#goal)
 - [Input Images](#input-images)
 - [Initial Development](#initial-development)
-- [Next Steps](#intended-next-steps)
+    * [Previously Intended Next Steps](#intended-next-steps)
+- [Actual Next Steps](#next-steps)
+    * [Image Processing Pipeline](#pipeline)
+    * [Training Tesseract](#training)
+    * [System Output](#output)
+- [References](#references)
 
 ## <a id="goal"></a> Goal
 
@@ -43,7 +48,7 @@ In order to make the Adaptive Gaussian Thresholding resulting image cleaner, we 
 
 ![](../.github/images/no-shadow-comparison-blurred.png)
 
-### <a id="intended-next-steps"></a> Intended Next Steps
+### <a id="intended-next-steps"></a> Previously Intended Next Steps
 
 - Apply an edge-detection algorithm in order to cut the whole receipt out of the picture before applying the binarization;
 - Apply some sort of image enhancement filter (either contrast or brightness manipulation) in order to decrease the shadow's impact on the image;
@@ -51,7 +56,21 @@ In order to make the Adaptive Gaussian Thresholding resulting image cleaner, we 
 - Test more with removing noise and contours before applying OCR;
 - Testing out different settings for Tesserect's OCR.
 
-## References
+## <a id="next-steps"></a> Actual Next Steps
+
+After the project's partial submission we received feedback from both the professor and the teaching assistant. Based on that feedback, the main change we decided to make to the project's proposal was to receive as input only the targeted area from the grocery receipt's photo, instead of the full image.
+
+What this means is that now, instead of using the full image as input, we'll use a cropped version of it, as can be seen below. This provided great improvement in OCR results.
+
+![](../.github/images/now-cropped.png)
+
+### <a id="pipeline"></a> Image Processing Pipeline
+
+### <a id="training"></a> Training and Configuring Tesseract
+
+### <a id="output"></a> System Output
+
+## <a id="references"></a> References
 
 ### General references
 
