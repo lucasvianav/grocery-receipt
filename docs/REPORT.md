@@ -4,9 +4,10 @@
 
 - [Goal](#goal)
 - [Input Images](#input-images)
+- [Group](#goal)
 - [Initial Development](#initial-development)
     * [Previously Intended Next Steps](#intended-next-steps)
-- [Actual Next Steps](#next-steps)
+- [What We Actually Did Next](#next-steps)
     * [Image Processing Pipeline](#pipeline)
     * [Training Tesseract](#training)
     * [System Output](#output)
@@ -27,6 +28,29 @@ All of the input images are [grocery receipt photos](../receipts) taken by the s
 ### With shadow
 
 ![](../.github/images/shadow-comparison.png)
+
+## <a id="group"></a> Group
+
+We mostly worked together as a group either synchronously in Discord (when coding, who needs pair programming when you have *quartet programming*) or asynchronously via Telegram (sharing research and debating what to do/try next and what steps to take). But the main individual contributions of each member were:
+
+- Abner Ignacio Melin Leite
+    * Managing (taking and cropping the photos) the input images
+    * Research about Tesseract, how to train it and other OCR options
+    * Managing the data (selecting, cropping, describing/transcribing) for training Tesseract
+- Antônio Pedro Medrado
+    * Research about the image processing pipeline
+    * Writing the report
+    * Preparing the presentation slides
+    * Preparing the demo notebook
+- Lucas Henrique Sant'Anna
+    * Managing (taking and cropping the photos) the input images
+    * Writing the presentation script
+    * Editing the presentation video
+    * Preparing the demo notebook
+- Lucas Viana Vilela
+    * Code implementation
+    * Research about the image processing pipeline and OCR techniques
+    * Writing the report
 
 ## <a id="initial-development"></a> Initial Development
 
@@ -56,7 +80,7 @@ In order to make the Adaptive Gaussian Thresholding resulting image cleaner, we 
 - Test more with removing noise and contours before applying OCR;
 - Testing out different settings for Tesserect's OCR.
 
-## <a id="next-steps"></a> Actual Next Steps
+## <a id="next-steps"></a> What We Actually Did Next
 
 After the project's partial submission we received feedback from both the professor and the teaching assistant. Based on that feedback, the main change we decided to make to the project's proposal was to receive as input only the targeted area from the grocery receipt's photo, instead of the full image.
 
@@ -66,7 +90,82 @@ What this means is that now, instead of using the full image as input, we'll use
 
 ### <a id="pipeline"></a> Image Processing Pipeline
 
+We tried the previously intended next steps, specifically the ideas about improving the image processing and segmentation, but they didn't amount to much. After more research, we ended up adopted the idea to use mathematical morphology and image subtraction (in addition to Otsu's thresholding) to produce a cleaner segmented image.
+
+That gave great results and now our pipeline looks like this:
+
+- Read the image and convert it to grayscale
+- Apply morphological dilation and a median blur to the image
+    * By dilating the background this results in removing the text (foreground) from the image, leaving only the receipt paper and the rest of the background (including noise and shadows)
+- Subtract the background image from the original one, leaving only in the foreground
+- Inverting the foreground image
+- Normalize + truncate + normalize the foreground image
+    * We arrived at this step empirically
+- Apply Otsu's Thresholding to the normalized image
+- Apply morphological opening to the segmented image in order to close gaps in the text
+
+With this, we got great results even for the shadowy photo (below).
+
+![](../.github/images/final-pipeline-full.png)
+![](../.github/images/final-pipeline-cropped.png)
+
 ### <a id="training"></a> Training and Configuring Tesseract
+
+#### Tesseract x Google Vision
+
+Both the professor and the teaching assistant mentioned they tried uploading our pre-processed image to the [Google Vision API online demo](https://cloud.google.com/vision/#section-2) and got better OCR results than we presented, and that maybe there was a way to configure Tesserect to work like that.
+
+After some research, we found out that even though Tesseract is in fact sponsored by Google, Google's Vision AI is a paid API (apart from the online demo) and that those are two different products. Tesseract is a free (and lighter) alternative to Vision AI, but usually does not produce as good results - although training it and configuring it's OEM[^1] and PSM[^2] properly can certainly help improve it.
+
+#### Configuration
+
+Tessseract's manpage states that it's PSMs[^2] are:
+
+```
+0 = Orientation and script detection (OSD) only.
+1 = Automatic page segmentation with OSD.
+2 = Automatic page segmentation, but no OSD, or OCR. (not implemented)
+3 = Fully automatic page segmentation, but no OSD. (Default)
+4 = Assume a single column of text of variable sizes.
+5 = Assume a single uniform block of vertically aligned text.
+6 = Assume a single uniform block of text.
+7 = Treat the image as a single text line.
+8 = Treat the image as a single word.
+9 = Treat the image as a single word in a circle.
+10 = Treat the image as a single character.
+11 = Sparse text. Find as much text as possible in no particular order.
+12 = Sparse text with OSD.
+13 = Raw line. Treat the image as a single text line,
+    bypassing hacks that are Tesseract-specific.
+```
+
+Considering the receipt images consist of many lines of text, we focused text in modes 1 and 3 - with automatic page segmentation and without/with OSD[^3], respectively. Results were exactly the same - even for tilted images (in which you'd expect OSD would perform better) both were as bad. We kept the PSM[^2] setting to mode **1**.
+
+Then there's OEM[^1]:
+
+```
+0 = Original Tesseract only.
+1 = Neural nets LSTM only.
+2 = Tesseract + LSTM.
+3 = Default, based on what is available.
+```
+
+We set this to mode **1** since it's the only one our training data (better described below) supports.
+
+#### Training
+
+To train a Tesseract model we decided to use [Tesstrain](https://github.com/tesseract-ocr/tesstrain), which provided  us with a high level Makefile-powered CLI interface to apply our data to Tesseract and output a trained model.
+
+To feed Tesstrain, we gathered 28 lines of text from different receipts and transcribed them to text files (called "ground truth files"), as you can see in the [ocr-training](../ocr-training) directory. The training output was the file [grocery.traineddata](../ocr-training/grocery.traineddata), that we're now using (and this means you need to copy it to your `tessdata` directory in order to run the project).
+
+Here's an example of training image and ground truth:
+
+![](../.github/images/training-01.png)
+```
+001 7898080640611 LEITE LV ITALAC 1L. C/TPA INTEGRAL 1UN x 5,15(0,91) 5,15
+```
+
+Aside from this, we're also using the portuguese and english languages tessdata files, which you can get from [tesseract-ocr/tessdata_best](https://github.com/tesseract-ocr/tessdata_best) and also need to be in your `tessdata` directory.
 
 ### <a id="output"></a> System Output
 
@@ -81,12 +180,14 @@ What this means is that now, instead of using the full image as input, we'll use
 - [How to train Tesseract 4](https://guiem.medium.com/how-to-train-tesseract-4-ebe5881ff3b7)
 - [Tesstrain](https://github.com/tesseract-ocr/tesstrain)
 - [Segmentation fault when trying to train tesseract with given training data](https://github.com/tesseract-ocr/tesstrain/issues/191)
+- [Tesseract manpage](https://manpages.org/tesseract)
 
 ### Google Vision x Tesseract
 
 - [Comparing Tesseract OCR with Google Vision OCR for Text Recognition in Invoices](https://medium.com/ixorthink/comparing-tesseract-ocr-with-google-vision-ocr-for-text-recognition-in-invoices-bddf98f3f3bd)
 - [Side-by-side OCR in Python with Google Vision and Tesseract](https://towardsdatascience.com/side-by-side-ocr-in-python-with-google-vision-and-tesseract-66021d5702a0)
 - [Train a custom Tesseract OCR model as an alternative to Google vision for reading children’s handwriting](https://towardsdatascience.com/train-a-custom-tesseract-ocr-model-as-an-alternative-to-google-vision-ocr-for-reading-childrens-db8ba41571c8)
+- [Tesseract or Google Vision API for image OCR?](https://www.reddit.com/r/computervision/comments/74qcqv/tesseract_or_google_vision_api_for_image_ocr/)
 
 ### StackOverflow
 
@@ -96,3 +197,7 @@ What this means is that now, instead of using the full image as input, we'll use
 - [Converting an image to grayscale using numpy](https://stackoverflow.com/questions/51285593/converting-an-image-to-grayscale-using-numpy)
 - [How to improve the OCR accuracy in this image?](https://stackoverflow.com/questions/67360958/how-to-improve-the-ocr-accuracy-in-this-image)
 - [How to remove shadow from scanned images using OpenCV?](https://stackoverflow.com/questions/44752240/how-to-remove-shadow-from-scanned-images-using-opencv)
+
+[^1]: OCR Engine Mode
+[^2]: Page Segmentation Mode
+[^3]: Orientation and Script Detection

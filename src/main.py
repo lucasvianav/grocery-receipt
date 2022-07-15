@@ -8,7 +8,7 @@ import utils
 
 if __name__ == "__main__":
     original_img: NDArray = cv2.imread(
-        "receipts/cropped/cropped.jpg", cv2.IMREAD_GRAYSCALE
+        "receipts/cropped/no-shadow.jpg", cv2.IMREAD_GRAYSCALE
     )
 
     # apply otsu binarization to the pre-processed image
@@ -24,18 +24,8 @@ if __name__ == "__main__":
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
     otsu_img = cv2.morphologyEx(otsu_img, cv2.MORPH_OPEN, kernel)
 
-    # utils.plot(
-    #     [
-    #         {"title": "Original image", "image": original_img},
-    #         {"title": "Otsu", "image": otsu_img},
-    #     ],
-    #     1,
-    #     2,
-    #     False,
-    # )
-
     text: str = pytesseract.image_to_string(
-        otsu_img, lang="grocery", config="--oem 1 --psm 3"
+        otsu_img, lang="por+grocery+eng", config="--oem 1 --psm 1"
     )
     items_indexes = re.findall(r"^\d{3}\s{1,}", text, re.IGNORECASE + re.MULTILINE)
     total = re.findall(
@@ -55,5 +45,5 @@ if __name__ == "__main__":
 
     print(f"Number of items: {len(items_indexes)}")
     for i, item in enumerate(arr):
-        print(f"Item {i}: {item}")
+        print(f"Item {i + 1}: {item}")
     print(f"Total value: R${total}")
