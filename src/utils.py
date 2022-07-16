@@ -73,3 +73,8 @@ def clean(img: NDArray) -> NDArray:
     )
 
     return truncated_img
+
+
+def parse_float(number: str) -> float:
+    """Parse a comma-separated decimal number to a float rounded to 2 decimal places."""
+    return round(float(number.replace(",", ".")), 2)

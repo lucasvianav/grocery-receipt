@@ -1,5 +1,7 @@
 import re
 
+from utils import parse_float
+
 
 class Product:
     """Represent a grocery product."""
@@ -18,15 +20,15 @@ class Product:
         )
 
         if not matches:
-            return None
+            raise RuntimeError("Product data couldn't be parsed.")
 
         name, quantity, unity, unit_price, price = matches[0]
 
         self.__name = name.title()
-        self.__quantity = round(float(quantity.replace(unity, "").replace(",", ".")), 2)
+        self.__quantity = parse_float(quantity.replace(unity, ""))
         self.__measurement_unity = unity.lower()
-        self.__unit_price = round(float(unit_price.replace(",", ".")), 2)
-        self.__price = round(float(price.replace(",", ".")), 2)
+        self.__unit_price = parse_float(unit_price)
+        self.__price = parse_float(price)
         self.__pricing_inconsistent = (
             abs(self.__unit_price * self.__quantity - self.__price) > 1
         )
