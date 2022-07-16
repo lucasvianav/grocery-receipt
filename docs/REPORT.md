@@ -11,6 +11,7 @@
     * [Image Processing Pipeline](#pipeline)
     * [Training Tesseract](#training)
     * [System Output](#output)
+- [Conclusion](#references)
 - [References](#references)
 
 ## <a id="goal"></a> Goal
@@ -109,6 +110,14 @@ With this, we got great results even for the shadowy photo (below).
 ![](../.github/images/final-pipeline-full.png)
 ![](../.github/images/final-pipeline-cropped.png)
 
+#### Other Processed Image Examples
+
+As you can see, the cleaner/less crumpled the receipt, the better. The original images are on the left (converted to grayscale) and the segmented one is on the right.
+
+![](../.github/images/clean.png)
+![](../.github/images/not-very-crumpled.png)
+![](../.github/images/very-crumpled.png)
+
 ### <a id="training"></a> Training and Configuring Tesseract
 
 #### Tesseract x Google Vision
@@ -169,6 +178,32 @@ Aside from this, we're also using the portuguese and english languages tessdata 
 
 ### <a id="output"></a> System Output
 
+Also with the approval of the professor and teaching assistant, we did not focus on implementing an interactive system, but instead on the actual image processing pipeline. So this is why we pivoted from the original goal (where the user would be able to split any number of grocery receipts between a group of people, by selecting which products each person would pay for) for a simpler system which takes a single cropped grocery receipt photo as input and outputs it's relevant contents formatted and in string format.
+
+We used RegEx to extract the relevant data from Tesseract's raw output (from which we also corrected some common text recognition errors that we noticed while testing). The extracted data consists in:
+
+- Each product's name;
+- Each product's quantity (units, kilograms, etc);
+- Each product's "unity of measurement" (units, kilograms, etc);
+- Each product's unitary price (per unit, kilogram, etc);
+- Each product's total price (for the whole quantity bought);
+- The receipt's total price.
+
+To try and ascertain some degree of consistency between the data, we make three validation checks
+
+1. For each product: is the extracted total price is equivalent (with a margin of error) to the product between quantity and unitary price?
+2. For the whole receipt: if a total price could not be extracted, do all products have consistent pricing?
+3. For the whole receipt: if a total price could be extracted, is it equivalent (with a margin of error) to the sum of the prices of each product?
+
+If any of these questions is a negative, we add a "(maybe)" to the output of some data, to indicate there's no guarantee that info is correct.
+
+<a id="input-output"></a>
+#### Input
+
+![](../.github/images/output.jpg)
+
+#### Output
+
 ```
 Product #1
 Product name: Mucarela Italac Kg
@@ -188,8 +223,18 @@ Quantity bought: 20.04 kg. (maybe)
 Price per kg.: R$18.39 (maybe)
 Total price: R$2.51 (maybe)
 
-TOTAL RECEIPT VALUE: R$13.98
+TOTAL RECEIPT VALUE: R$13.98 (maybe)
 ```
+
+## <a id="conclusion"></a> Conclusion
+
+After a lot of research and trial and error, we arrived at an image processing pipeline consisting that uses filtering/blurring, mathematical morphology and image segmentation techniques in order to clean up a cropped grocery receipt photo and feed it to an OCR software.
+
+The final system is a reduced version of the original goal (that needed a lot more work towards a more complex interactive system, which is not in the scope of this discipline), consisting of receiving only one image as input and outputting it's contents as a string (post image processing and OCR).
+
+The text recognition isn't perfect (as you can see in [this](#input-output) example, where the first item is missing from the output), but considering the scope of the project we consider it had great results, specially for the image processing part, that produced very clean image segmentation even for not-so-clean photos (with shadows and/or crumpled paper).
+
+It was a great project to apply in practice the digital image processing techniques and tools we learned throughout the course, learn more about their real-world utility and even discover new techniques in the area, which was the assignment's main objective.
 
 ## <a id="references"></a> References
 
