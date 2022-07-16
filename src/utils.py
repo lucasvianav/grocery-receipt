@@ -1,3 +1,6 @@
+from os.path import exists
+from typing import Callable
+
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -94,3 +97,38 @@ def get_n_leading_zeros(length: int) -> int:
     Number of leading zeros necessary.
     """
     return len(str(length))
+
+
+def image_exists(filepath: str) -> bool:
+    """Check if a filepath refers to a PNG or JPG file that exists."""
+    return (filepath.endswith(".png") or filepath.endswith(".jpg")) and exists(filepath)
+
+
+def prompt(
+    text: str,
+    validate: Callable | None = None,
+    err: str = "Invalid input, try again.",
+) -> str:
+    """
+    Prompt user for input and only return when the input is valid.
+
+    Parameters
+    ----------
+    text: input prompt.
+    validate?: validator for the input - if none is provided, all input is considered valid.
+               It should receive a string to validate as parameter and return a bool.
+    err error message in case validation fails. Defaults to: "Invalid input, try again."
+
+    Returns
+    -------
+    The user's validated input.
+    """
+    if not text.endswith("\n"):
+        text += " "
+    r = input(text)
+    if validate:
+        is_valid = validate(r)
+        while not is_valid:
+            r = input(f"\n{err} {text}")
+            is_valid = validate(r)
+    return r

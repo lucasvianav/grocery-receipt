@@ -3,12 +3,15 @@ import pytesseract
 from numpy.typing import NDArray
 
 from receipt import Receipt
-from utils import clean
+from utils import clean, image_exists, prompt
 
 if __name__ == "__main__":
-    original_img: NDArray = cv2.imread(
-        "receipts/cropped/no-shadow.jpg", cv2.IMREAD_GRAYSCALE
+    image_filepath = prompt(
+        "What is the path (relative or absolute) to the grocery receipt photo?",
+        image_exists,
+        "The filepath must be of a PNG or JPG image and the file must exist.",
     )
+    original_img: NDArray = cv2.imread(image_filepath, cv2.IMREAD_GRAYSCALE)
 
     # apply otsu binarization to the pre-processed image
     otsu_img: NDArray

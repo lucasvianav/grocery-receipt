@@ -11,6 +11,11 @@ class Receipt:
     """All grocery products in a receipt."""
     __value: float
     """The receipt's total value/price."""
+    __pricing_inconsistent: bool
+    """
+    If the total price read from the raw text is too different from the on
+    calculated through the sum of all products.
+    """
 
     def __init__(self, raw: str):
         items_indexes = re.findall(r"^\d+\s+", raw, re.IGNORECASE + re.MULTILINE)
@@ -45,11 +50,10 @@ class Receipt:
             raise RuntimeError("The receipt's products' data could not be parsed")
 
         # save the total price
-        self.__value = (
-            parse_float(price)
-            if price
-            else sum([p.get_price() for p in self.__products])
-        )
+        sum_products = sum([p.get_price() for p in self.__products])
+        inconsistent = not price and any([p.get_price_inconsistency() for p in self.__products])
+        self.__value = parse_float(price) if price else sum_products
+        self.__pricing_inconsistent = inconsistent or abs(sum_products - self.__value) > 3
 
     def __str__(self):
         n_leading_zeros = get_n_leading_zeros(len(self.__products))
@@ -60,6 +64,7 @@ class Receipt:
             ]
         )
         string += f"\n\nTOTAL RECEIPT VALUE: R${self.get_value()}"
+        string += " (maybe)" if self.__pricing_inconsistent else ""
         return string
 
     def get_products(self):

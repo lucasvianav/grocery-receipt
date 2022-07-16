@@ -68,6 +68,9 @@ class Product:
     def get_price(self) -> float:
         return self.__price
 
+    def get_price_inconsistency(self) -> bool:
+        return self.__pricing_inconsistent
+
     def __substitute_common_mistakes(self, raw: str) -> str:
         """Correct common OCR mistakes from when parsing a grocery product from a receipt photo."""
         return (
