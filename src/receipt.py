@@ -51,9 +51,13 @@ class Receipt:
 
         # save the total price
         sum_products = sum([p.get_price() for p in self.__products])
-        inconsistent = not price and any([p.get_price_inconsistency() for p in self.__products])
+        inconsistent = not price and any(
+            [p.get_price_inconsistency() for p in self.__products]
+        )
         self.__value = parse_float(price) if price else sum_products
-        self.__pricing_inconsistent = inconsistent or abs(sum_products - self.__value) > 3
+        self.__pricing_inconsistent = (
+            inconsistent or abs(sum_products - self.__value) > 3
+        )
 
     def __str__(self):
         n_leading_zeros = get_n_leading_zeros(len(self.__products))
