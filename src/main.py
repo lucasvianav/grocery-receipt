@@ -1,9 +1,9 @@
 import cv2
 import pytesseract
 from numpy.typing import NDArray
-from receipt import Receipt
 
-import utils
+from receipt import Receipt
+from utils import clean
 
 if __name__ == "__main__":
     original_img: NDArray = cv2.imread(
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # apply otsu binarization to the pre-processed image
     otsu_img: NDArray
     _, otsu_img = cv2.threshold(
-        utils.clean(original_img),
+        clean(original_img),
         0,
         255,
         cv2.THRESH_BINARY + cv2.THRESH_OTSU,

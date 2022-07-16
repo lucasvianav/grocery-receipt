@@ -1,20 +1,23 @@
 import re
 
 from product import Product
-from utils import parse_float
+from utils import get_n_leading_zeros, parse_float
 
 
 class Receipt:
     """Represent a grocery receipt."""
 
     __products: list[Product] = []
+    """All grocery products in a receipt."""
     __value: float
+    """The receipt's total value/price."""
 
     def __init__(self, raw: str):
         items_indexes = re.findall(r"^\d+\s+", raw, re.IGNORECASE + re.MULTILINE)
         price_regex = r"^Total\s*R\$\s*(\d{1,},\d{2}).*$"
         price_line = re.search(price_regex, raw, re.IGNORECASE + re.MULTILINE)
 
+        # search for the total price line in the raw text
         if price_line:
             price_line_start, _ = price_line.span()
             price = re.findall(price_regex, raw, re.IGNORECASE + re.MULTILINE)[0]
@@ -41,6 +44,7 @@ class Receipt:
         if not self.__products:
             raise RuntimeError("The receipt's products' data could not be parsed")
 
+        # save the total price
         self.__value = (
             parse_float(price)
             if price
@@ -48,7 +52,7 @@ class Receipt:
         )
 
     def __str__(self):
-        n_leading_zeros = len(str(len(self.__products)))
+        n_leading_zeros = get_n_leading_zeros(len(self.__products))
         string = "\n\n".join(
             [
                 f"Product #{str(i + 1).zfill(n_leading_zeros)}\n{p}"

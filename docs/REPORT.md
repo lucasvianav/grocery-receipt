@@ -169,6 +169,28 @@ Aside from this, we're also using the portuguese and english languages tessdata 
 
 ### <a id="output"></a> System Output
 
+```
+Product #1
+Product name: Mucarela Italac Kg
+Quantity bought: 0.06 kg.
+Price per kg.: R$46.9
+Total price: R$2.72
+
+Product #2
+Product name: 1 Hrc Ovos Barilla 5006 Parafuso 3
+Quantity bought: 1.0 un. (maybe)
+Price per un.: R$3.98 (maybe)
+Total price: R$98.0 (maybe)
+
+Product #3
+Product name: J Lheddar Polenghi Kg
+Quantity bought: 20.04 kg. (maybe)
+Price per kg.: R$18.39 (maybe)
+Total price: R$2.51 (maybe)
+
+TOTAL RECEIPT VALUE: R$13.98
+```
+
 ## <a id="references"></a> References
 
 ### General references

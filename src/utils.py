@@ -27,6 +27,7 @@ def plot(
             plt.axis("on" if axis else "off")
             plt.title(img["title"])
             plt.imshow(img["image"], cmap=img["cmap"] if "cmap" in img else "gray")
+
     plt.show()
 
 
@@ -78,3 +79,18 @@ def clean(img: NDArray) -> NDArray:
 def parse_float(number: str) -> float:
     """Parse a comma-separated decimal number to a float rounded to 2 decimal places."""
     return round(float(number.replace(",", ".")), 2)
+
+
+def get_n_leading_zeros(length: int) -> int:
+    """
+    Calculate the necessary number of leading zeros to consistently enumerate all elements in a list of given length.
+
+    Parameters
+    ----------
+    length: how many elements there are in the list to be enumerated
+
+    Returns
+    -------
+    Number of leading zeros necessary.
+    """
+    return len(str(length))
