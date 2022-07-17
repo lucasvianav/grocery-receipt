@@ -11,6 +11,7 @@
     * [Image Processing Pipeline](#pipeline)
     * [Training Tesseract](#training)
     * [System Output](#output)
+- [Results](#results)
 - [Conclusion](#references)
 - [References](#references)
 
@@ -226,13 +227,157 @@ Total price: R$2.51 (maybe)
 TOTAL RECEIPT VALUE: R$13.98 (maybe)
 ```
 
+## <a id="results"></a> Results
+
+### Example 01
+
+Here's an example using a more complex photo.
+
+- Text partly wiped out in some sections;
+- Leftmost part truncated;
+- Application of some discounts;
+
+#### Input
+
+![](../.github/images/img00.jpg)
+
+#### Output
+
+```
+Product #1
+Product name: Ling Seara 2156 Inia. Def
+Quantity bought: 1.0 un.
+Price per un.: R$6.99
+Total price: R$6.99
+
+Product #2
+Product name: 1 Ing Serra 2156 Fininha Def
+Quantity bought: 1.0 un.
+Price per un.: R$6.99
+Total price: R$6.99
+
+Product #3
+Product name: Semolado Bastlar 500G Es
+Quantity bought: 1.0 un.
+Price per un.: R$3.49
+Total price: R$3.49
+
+Product #4
+Product name: Leite Ly Italac 1L C/Tpr Tera
+Quantity bought: 1.0 un.
+Price per un.: R$5.15
+Total price: R$5.15
+
+Product #5
+Product name: Leite Lv Italac 1L L/Tpa Integral
+Quantity bought: 1.0 un.
+Price per un.: R$5.15
+Total price: R$5.15
+
+Product #6
+Product name: Molho Ton Heinz 3006 Sc Trad
+Quantity bought: 1.0 un.
+Price per un.: R$2.39
+Total price: R$2.39
+
+Product #7
+Product name: Holho Tom Heinz 3006 5C Trad
+Quantity bought: 1.0 un.
+Price per un.: R$2.39
+Total price: R$2.39
+
+Product #8
+Product name: Mahao Papaya Fracionadd Kg
+Quantity bought: 0.34 kg. (maybe)
+Price per kg.: R$10.48 (maybe)
+Total price: R$5.15 (maybe)
+```
+
+### Example 02
+
+Here's an example where the Tesseract's text recognition isn't good (probably because of too many gaps in the text) and as a result the system is only able to barely recognize two products.
+
+#### Input
+
+![](../.github/images/img01.jpg)
+
+#### Output
+
+```
+Product #1
+Product name: Iul X13,2603,04) Gy60Rog0222 Cr Leite Italac 2006 Tp  =  Aa Van ;
+Quantity bought: 1.0 un.
+Price per un.: R$3.97
+Total price: R$3.97
+
+Product #2
+Product name: (Kr Leite Italac 20Gg Tf  En
+Quantity bought: 1.0 un. (maybe)
+Price per un.: R$3.97 (maybe)
+Total price: R$9.51 (maybe)
+
+TOTAL RECEIPT VALUE: R$13.48 (maybe)
+```
+
+#### Observation
+
+In this specific example, applying a stronger morphological opening would produce better results by closing the gaps in the text. The problem is that without some kind of automatic recognition of which images need this stronger opening it would also make other images with fewer gaps less readable.
+
+![](../.github/images/img01-opened.png)
+
+```
+Product #1
+Product name: Um X 11,991(3,77) É 7696331100310 Man Aviacan 200G Pt A 105400
+Quantity bought: 1.0 un.
+Price per un.: R$13.28
+Total price: R$13.28
+
+Product #2
+Product name: (K Leite Italac 2G0G Tf
+Quantity bought: 1.0 un. (maybe)
+Price per un.: R$3.97 (maybe)
+Total price: R$9.85 (maybe)
+
+Product #3
+Product name: Deterg L1 Ype 500Ml Ned Id I |
+Quantity bought: 1.0 un.
+Price per un.: R$7.35
+Total price: R$7.35
+```
+
+### Example 03
+
+For a very crumpled paper, most items aren't detected and the price recognition fails miserably.
+
+#### Input
+
+![](../.github/images/img14.jpg)
+
+#### Output
+
+```
+Product #1
+Product name: Batata Primeira Ka 1,475X6 4 3,7001002 Oo Guima Moro
+Quantity bought: 5263.0 kg.
+Price per kg.: R$2.38
+Total price: R$12525.94
+
+Product #2
+Product name: Pernil $705 Ka Esf Bee Pas E Uo,
+Quantity bought: 546.0 kg.
+Price per kg.: R$28.0
+Total price: R$15288.0
+
+TOTAL RECEIPT VALUE: R$27813.94
+```
+
 ## <a id="conclusion"></a> Conclusion
 
 After a lot of research and trial and error, we arrived at an image processing pipeline consisting that uses filtering/blurring, mathematical morphology and image segmentation techniques in order to clean up a cropped grocery receipt photo and feed it to an OCR software.
 
 The final system is a reduced version of the original goal (that needed a lot more work towards a more complex interactive system, which is not in the scope of this discipline), consisting of receiving only one image as input and outputting it's contents as a string (post image processing and OCR).
 
-The text recognition isn't perfect (as you can see in [this](#input-output) example, where the first item is missing from the output), but considering the scope of the project we consider it had great results, specially for the image processing part, that produced very clean image segmentation even for not-so-clean photos (with shadows and/or crumpled paper).
+The text recognition isn't perfect (as you can see in [this](#input-output) example and [this](#results) section, where the first item is missing from the output), but considering the scope of the project we consider it had great results, specially for the image processing part, that produced very clean image segmentation even for not-so-clean photos (with shadows and/or crumpled paper).
 
 It was a great project to apply in practice the digital image processing techniques and tools we learned throughout the course, learn more about their real-world utility and even discover new techniques in the area, which was the assignment's main objective.
 

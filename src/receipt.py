@@ -31,6 +31,11 @@ class Receipt:
             price = None
             products_raw = raw
 
+        discount_line = re.search(r"[DoO0J]esc[ao0uy]nt[oy0u]s?", raw, re.IGNORECASE + re.MULTILINE)
+        if discount_line:
+            discount_line_start, _ = discount_line.span()
+            products_raw = raw[:discount_line_start]
+
         # split products raw text into a list
         split_pivot = "||<<>>####+####<<>>||"
         for i in items_indexes:

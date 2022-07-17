@@ -26,6 +26,16 @@ if __name__ == "__main__":
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
     otsu_img = cv2.morphologyEx(otsu_img, cv2.MORPH_OPEN, kernel)
 
+    # plot(
+    #     [
+    #         {"title": "Grayscale Image", "image": original_img},
+    #         {"title": "Segmented Image", "image": otsu_img},
+    #     ],
+    #     1,
+    #     2,
+    #     False,
+    # )
+
     # apply OCR and print output
     text: str = pytesseract.image_to_string(
         otsu_img, lang="por+grocery+eng", config="--oem 1 --psm 1"
