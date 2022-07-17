@@ -55,7 +55,7 @@ class Receipt:
             inconsistent = not price and any(
                 [p.get_price_inconsistency() for p in self.__products]
             )
-            self.__value = parse_float(price) if price else sum_products
+            self.__value = parse_float(price) if price else round(sum_products, 2)
             self.__pricing_inconsistent = (
                 inconsistent or abs(sum_products - self.__value) > 3
             )

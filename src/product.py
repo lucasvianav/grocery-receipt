@@ -25,7 +25,7 @@ class Product:
     def __init__(self, raw: str):
         # use regex to extract relevant info
         matches: list[tuple[str, ...]] = re.findall(
-            r"^[\w\d]*\s*[a-z\s]*([\w\d\s]+?)\s*(\d*,?\d*(UN|KG)) x (\d*,?\d*).+?(\d*,?\d*)$",
+            r"^\S*\s*[a-z\s]*(.+?)\s*(\d*,?\d*(UN|KG))\s*x\s*(\d*,?\d*)\(?[\d,]*\)?.+?(\d*,?\d*)$",
             self.__substitute_common_mistakes(raw.strip()),
         )
 
@@ -40,10 +40,9 @@ class Product:
             self.__quantity = parse_float(quantity.replace(unity, ""))
             self.__measurement_unity = unity.lower()
             self.__unit_price = parse_float(unit_price)
-            self.__price = parse_float(price)
-            self.__pricing_inconsistent = (
-                abs(self.__unit_price * self.__quantity - self.__price) > 1
-            )
+            calculated_price = round(self.__unit_price * self.__quantity, 2)
+            self.__price = parse_float(price) if price else calculated_price
+            self.__pricing_inconsistent = abs(calculated_price - self.__price) > 1
         except Exception:
             raise RuntimeError("Product data couldn't be parsed.")
 
@@ -77,9 +76,14 @@ class Product:
     def __substitute_common_mistakes(self, raw: str) -> str:
         """Correct common OCR mistakes from when parsing a grocery product from a receipt photo."""
         return (
-            raw.replace("JUN", "1UN")
+            raw.replace("\n", " ")
             .replace("]", "I")
             .replace("[", "L")
-            .replace("\n", " ")
             .replace("k9", "kg")
+            .replace("JUN", "1UN")
+            .replace("TUN", "1UN")
+            .replace("IUN", "1UN")
+            .replace("LUN", "1UN")
+            .replace(" UN", " 1UN")
+            .replace("lUN", "1UN")
         )
