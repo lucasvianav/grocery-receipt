@@ -30,4 +30,7 @@ if __name__ == "__main__":
     text: str = pytesseract.image_to_string(
         otsu_img, lang="por+grocery+eng", config="--oem 1 --psm 1"
     )
-    print(Receipt(text))
+    try:
+        print(Receipt(text))
+    except RuntimeError as err:
+        print(err)

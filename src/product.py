@@ -35,14 +35,17 @@ class Product:
         name, quantity, unity, unit_price, price = matches[0]
 
         # format and save data
-        self.__name = name.title()
-        self.__quantity = parse_float(quantity.replace(unity, ""))
-        self.__measurement_unity = unity.lower()
-        self.__unit_price = parse_float(unit_price)
-        self.__price = parse_float(price)
-        self.__pricing_inconsistent = (
-            abs(self.__unit_price * self.__quantity - self.__price) > 1
-        )
+        try:
+            self.__name = name.title()
+            self.__quantity = parse_float(quantity.replace(unity, ""))
+            self.__measurement_unity = unity.lower()
+            self.__unit_price = parse_float(unit_price)
+            self.__price = parse_float(price)
+            self.__pricing_inconsistent = (
+                abs(self.__unit_price * self.__quantity - self.__price) > 1
+            )
+        except Exception:
+            raise RuntimeError("Product data couldn't be parsed.")
 
     def __str__(self) -> str:
         representation = [
