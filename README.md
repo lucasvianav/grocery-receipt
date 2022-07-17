@@ -2,6 +2,8 @@
 
 Repository for the "SCC0251 - Digital Image Processing" course's project offered for Computer Science undergraduates at ICMC - USP, by professor Moacir Antonelli Ponti.
 
+For a quick guide of how to setup the project, see [docs/SETUP.md](./docs/SETUP.md).
+
 ## Group
 
 - Abner Ignacio Melin Leite - 10415165
