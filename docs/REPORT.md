@@ -39,15 +39,16 @@ We mostly worked together as a group either synchronously in Discord (when codin
     * Managing (taking and cropping the photos) the input images
     * Research about Tesseract, how to train it and other OCR options
     * Managing the data (selecting, cropping, describing/transcribing) for training Tesseract
+    * Preparing the presentation slides
 - Antônio Pedro Medrado
     * Research about the image processing pipeline
     * Writing the report
-    * Preparing the presentation slides
     * Preparing the demo notebook
+    * Editing the presentation video
 - Lucas Henrique Sant'Anna
     * Managing (taking and cropping the photos) the input images
     * Writing the presentation script
-    * Editing the presentation video
+    * Preparing the presentation slides
     * Preparing the demo notebook
 - Lucas Viana Vilela
     * Code implementation
